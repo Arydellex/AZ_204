@@ -1,1 +1,123 @@
+# Connect an App to Azure Cache for Redis using .NET Core
 
+## Objective:
+Create a new Redis Cache instance using Azure CLI commands, and develop a .NET Core console app to add and retrieve values from the cache using the StackExchange.Redis package.
+
+## Why does this matter?
+- Provides hands-on experience with Azure Cache for Redis.
+- Demonstrates the use of the Azure CLI for managing caching resources.
+- Helps understand how to interact with Redis Cache programmatically in .NET applications.
+
+## Use Cases:
+- Implementing distributed caching for improved application performance.
+- Learning the process of managing caching services using the Azure CLI.
+- Developing cache-based communication between different components of a system.
+- Automating caching workflows in .NET applications.
+
+## Steps to Completion:
+
+### 1. Create Azure Resources
+- Signed in to the Azure portal and opened the Cloud Shell, selecting **Bash** as the shell.
+- Created a resource group for Azure resources. Replaced `<myLocation>` with a region near you:
+
+  ```bash
+  az group create --name az204-redis-rg --location <myLocation>
+  ```
+
+- Created an Azure Cache for Redis instance by using the `az redis create` command. The instance name needed to be unique and the following script generated one. Replaced `<myLocation>` with the region used in the previous step. This command took a few minutes to complete:
+
+  ```bash
+  redisName=az204redis$RANDOM
+  az redis create --location <myLocation> \
+      --resource-group az204-redis-rg \
+      --name $redisName \
+      --sku Basic --vm-size c0
+  ```
+
+- In the Azure portal, navigated to the new Redis Cache created.
+- Selected **Access keys** in the **Settings/Authentication** section of the Navigation Pane and left the portal open. Copied the **Primary connection string (StackExchange.Redis)** value to use in the app later.
+
+### 2. Create the Console Application
+- Created a console app by running the following command in the Visual Studio Code terminal:
+
+  ```bash
+  dotnet new console -o Rediscache
+  ```
+
+- Opened the app in Visual Studio Code by selecting **File > Open Folder** and choosing the folder for the app.
+- Added the `StackExchange.Redis` package to the project:
+
+  ```bash
+  dotnet add package StackExchange.Redis
+  ```
+
+- Deleted any existing code in the `Program.cs` file and added the following `using` statement at the top:
+
+  ```csharp
+  using StackExchange.Redis;
+  ```
+
+- Added the following variable after the `using` statement, replacing `<REDIS_CONNECTION_STRING>` with the **Primary connection string (StackExchange.Redis)** from the portal:
+
+  ```csharp
+  // connection string to your Redis Cache    
+  string connectionString = "<REDIS_CONNECTION_STRING>";
+  ```
+
+- Appended the following code in the `Program.cs` file:
+
+  ```csharp
+  using (var cache = ConnectionMultiplexer.Connect(connectionString))
+  {
+      IDatabase db = cache.GetDatabase();
+
+      // Snippet below executes a PING to test the server connection
+      var result = await db.ExecuteAsync("ping");
+      Console.WriteLine($"PING = {result.Resp2Type} : {result}");
+
+      // Call StringSetAsync on the IDatabase object to set the key "test:key" to the value "100"
+      bool setValue = await db.StringSetAsync("test:key", "100");
+      Console.WriteLine($"SET: {setValue}");
+
+      // StringGetAsync retrieves the value for the "test" key
+      string getValue = await db.StringGetAsync("test:key");
+      Console.WriteLine($"GET: {getValue}");
+  }
+  ```
+
+- In the Visual Studio Code terminal, ran the following commands to build and run the app:
+
+  ```bash
+  dotnet build
+  dotnet run
+  ```
+
+- The output was similar to the following example:
+
+  ```
+  PING = SimpleString : PONG
+  SET: True
+  GET: 100
+  ```
+
+- Returned to the portal and selected **Activity log** in the **Azure Cache for Redis** blade to view the operations in the log.
+
+### 3. Clean Up Resources
+When the resources were no longer needed, used the `az group delete` command to remove the resource group:
+
+```bash
+az group delete -n az204-redis-rg --no-wait
+```
+
+## Result:
+- An Azure Cache for Redis instance was created.
+- A .NET Core console application was developed to add and retrieve values from the cache.
+- Values were successfully added to and retrieved from the Redis cache.
+- Resources were cleaned up after the project was completed.
+- The project demonstrated the use of Azure Cache for Redis and .NET Core for cache-based communication.
+
+## Notes:
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided code snippets as a guide to perform the tasks.
+```
