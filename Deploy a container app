@@ -1,1 +1,96 @@
+# Deploy a Container App using Azure Portal
 
+## Objective
+Create a secure Container Apps environment and deploy a container app.
+
+## Why does this matter?
+- Provides hands-on experience with Azure Container Apps.
+- Demonstrates the use of the Azure portal for managing container applications.
+- Helps understand the benefits of containerized application deployment.
+- Showcases the security and efficiency of Azure Container Apps.
+
+## Use Cases
+- Deploying containerized applications securely and efficiently.
+- Learning the process of managing container apps using the Azure portal.
+- Running scalable applications in a secure environment.
+- Automating container app deployments.
+
+## Steps to Completion
+
+### 1. Prepare Your Environment
+- Signed in to the Azure portal and opened the Cloud Shell.
+- Selected the Bash environment once the shell opened.
+- Installed the Azure Container Apps extension for the CLI:
+    ```bash
+    az extension add --name containerapp --upgrade
+    ```
+- Registered the Microsoft.App namespace:
+    ```bash
+    az provider register --namespace Microsoft.App
+    ```
+    > Note: Azure Container Apps resources have migrated from the Microsoft.Web namespace to the Microsoft.App namespace.
+- Registered the Microsoft.OperationalInsights provider for the Azure Monitor Log Analytics workspace:
+    ```bash
+    az provider register --namespace Microsoft.OperationalInsights
+    ```
+    > Note: Registering the Microsoft.App namespace and Microsoft.OperationalInsights took a few minutes to complete.
+- Set environment variables used later in this exercise. Replace `<location>` with a region near you:
+    ```bash
+    myRG=az204-appcont-rg
+    myLocation=<location>
+    myAppContEnv=az204-env-$RANDOM
+    ```
+- Created the resource group for your container app:
+    ```bash
+    az group create \
+        --name $myRG \
+        --location $myLocation
+    ```
+
+### 2. Create an Environment
+An environment in Azure Container Apps creates a secure boundary around a group of container apps. Container Apps deployed to the same environment are deployed in the same virtual network and write logs to the same Log Analytics workspace.
+
+- Created an environment using the `az containerapp env create` command:
+    ```bash
+    az containerapp env create \
+        --name $myAppContEnv \
+        --resource-group $myRG \
+        --location $myLocation
+    ```
+
+### 3. Create a Container App
+After the container app environment finished deployment, deployed a container image to Azure Container Apps.
+
+- Deployed a sample app container image using the `az containerapp create` command:
+    ```bash
+    az containerapp create \
+        --name my-container-app \
+        --resource-group $myRG \
+        --environment $myAppContEnv \
+        --image mcr.microsoft.com/azuredocs/containerapps-helloworld:latest \
+        --target-port 80 \
+        --ingress 'external' \
+        --query properties.configuration.ingress.fqdn
+    ```
+    By setting `--ingress` to external, made the container app available to public requests. The command returned a link to access the app.
+
+### 4. Verify Deployment
+- Selected the link returned by the `az containerapp create` command to verify the container app was running.
+
+### 5. Clean Up Resources
+- Used the `az group delete` command to remove the resource group, the container app, and other resources stored there:
+    ```bash
+    az group delete --name $myRG
+    ```
+
+## Result
+- A secure container app environment was created.
+- A container app was deployed and is running in Azure.
+- The container app is accessible to the public.
+- Resources were cleaned up after the project was completed.
+- The project demonstrated the use of the Azure CLI for managing container apps.
+
+## Notes
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided code snippets as a guide to perform the tasks.
