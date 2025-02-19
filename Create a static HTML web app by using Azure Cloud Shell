@@ -1,1 +1,85 @@
+# Azure Static HTML Web App Deployment using Cloud Shell
 
+## Objective:
+Deploy a static HTML web application to Azure App Service using Azure Cloud Shell and the Azure CLI.
+
+## Why does this matter?
+- Provides hands-on experience with Azure App Service.
+- Demonstrates how to deploy and manage web apps using the Azure CLI.
+- Helps understand cloud-based hosting for static web applications.
+- Showcases the use of Azure Cloud Shell for resource deployment.
+
+## Use Cases:
+- Hosting a static website with minimal effort.
+- Learning Azure App Service and the CLI deployment process.
+- Quick prototyping and testing of web applications.
+- Automating cloud deployments for simple web apps.
+
+## Steps to Completion:
+
+### 1. Set Up the Environment
+- Open Azure Cloud Shell and switch to the Classic version.
+- Create and navigate to a new directory:
+  ```bash
+  mkdir htmlapp
+  cd htmlapp
+  ```
+
+### 2. Clone the Sample Application
+- Clone the sample HTML app repository:
+  ```bash
+  git clone https://github.com/Azure-Samples/html-docs-hello-world.git
+  ```
+
+### 3. Set Variables for Deployment
+- Define variables for the resource group and app name:
+  ```bash
+  resourceGroup=$(az group list --query "[].{id:name}" -o tsv)
+  appName=az204app$RANDOM
+  ```
+
+### 4. Deploy the Web App
+- Change to the sample app directory and deploy it:
+  ```bash
+  cd html-docs-hello-world
+  az webapp up -g $resourceGroup -n $appName --html
+  ```
+- Note the application URL from the output and open it in a browser:
+  ```json
+  {
+    "app_url": "https://<myAppName>.azurewebsites.net",
+    "location": "westeurope",
+    "name": "<app_name>",
+    "os": "Windows",
+    "resourcegroup": "<resource_group_name>",
+    "serverfarm": "appsvc_asp_Windows_westeurope",
+    "sku": "FREE",
+    "src_path": "/home/<username>/demoHTML/html-docs-hello-world"
+  }
+  ```
+
+### 5. Update and Redeploy the Application
+- Open the index.html file in the Cloud Shell editor:
+  ```bash
+  code index.html
+  ```
+- Modify the `<h1>` tag to update the site title.
+- Save (`ctrl + s`) and exit (`ctrl + q`).
+- Redeploy the updated app:
+  ```bash
+  az webapp up -g $resourceGroup -n $appName --html
+  ```
+- Refresh the browser to see the updated content.
+
+## Result:
+- A static HTML web application is deployed to Azure App Service.
+- The app is accessible via a public URL.
+- Users can update and redeploy changes easily using Azure CLI.
+- This process demonstrates efficient web hosting with Azure Cloud Shell.
+
+---
+
+### Notes:
+- Ensure the Cloud Shell is in Classic mode before starting.
+- Use the `az webapp list` command to verify the deployed apps.
+- Free-tier Azure resources are used in this exercise, suitable for testing and learning.
