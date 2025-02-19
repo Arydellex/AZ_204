@@ -1,77 +1,81 @@
-Objective:
+# Objective
 
 To demonstrate how to create, manage, and delete Azure Blob storage resources using the .NET client library in a console application.
 
-Why does this matter?
+## Why does this matter?
 
-Azure Blob Storage is a scalable cloud storage solution for unstructured data. It is widely used for data storage, backup, and archiving. Learning how to interact with Azure Blob Storage programmatically is essential for cloud-based applications that handle large amounts of data.
+Azure Blob Storage is a scalable cloud storage solution for unstructured data. It is widely used for data storage, backup, and archiving. Learning how to interact with Azure Blob Storage programmatically is beneficial for many developers.
 
-Use cases:
+## Use Cases
 
-Storing and retrieving large-scale unstructured data (images, videos, documents, etc.).
+- Storing and retrieving large-scale unstructured data (images, videos, documents, etc.).
+- Implementing cloud-based backups.
+- Serving static content for websites.
+- Data lakes for big data and analytics applications.
 
-Implementing cloud-based backups.
+# Steps to Completion
 
-Serving static content for websites.
+## 1. Prerequisites
 
-Data lakes for big data and analytics applications.
+- An Azure account with an active subscription (Sign up for a free trial).
+- Visual Studio Code installed.
+- .NET 8 SDK installed.
+- C# extension for Visual Studio Code.
+- Azure CLI installed.
 
-Steps to Completion:
+## 2. Setting Up Azure Resources
 
-1. Prerequisites
+### Log in to Azure:
 
-An Azure account with an active subscription (Sign up for a free trial).
-
-Visual Studio Code installed.
-
-.NET 8 SDK installed.
-
-C# extension for Visual Studio Code.
-
-Azure CLI installed.
-
-2. Setting Up Azure Resources
-
-Log in to Azure:
-
+```sh
 az login
+```
 
-Create a resource group:
+### Create a resource group:
 
+```sh
 az group create --location <myLocation> --name az204-blob-rg
+```
 
-Create a storage account:
+### Create a storage account:
 
+```sh
 az storage account create --resource-group az204-blob-rg --name <myStorageAcct> --location <myLocation> --sku Standard_LRS
+```
 
-Retrieve the connection string:
+### Retrieve the connection string:
 
-Navigate to the Azure Portal.
+1. Navigate to the Azure Portal.
+2. Locate the newly created storage account.
+3. Select Access keys > Copy the Connection string under key1.
 
-Locate the newly created storage account.
+## 3. Prepare the .NET Project
 
-Select Access keys > Copy the Connection string under key1.
+### Create a new console application:
 
-3. Prepare the .NET Project
-
-Create a new console application:
-
+```sh
 dotnet new console -n az204-blob
 cd az204-blob
 dotnet build
+```
 
-Create a folder for blob data:
+### Create a folder for blob data:
 
+```sh
 mkdir data
+```
 
-Install Azure Blob Storage client library:
+### Install Azure Blob Storage client library:
 
+```sh
 dotnet add package Azure.Storage.Blobs
+```
 
-4. Implement the .NET Code
+## 4. Implement the .NET Code
 
-Open Program.cs and replace the content with the following code:
+Open `Program.cs` and replace the content with the following code:
 
+```csharp
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System;
@@ -108,7 +112,7 @@ class Program
             Console.WriteLine("\t" + blobItem.Name);
         }
 
-        string downloadFilePath = localFilePath.Replace(".txt", "DOWNLOADED.txt");
+        string downloadFilePath = localFilePath.replace(".txt", "DOWNLOADED.txt");
         Console.WriteLine($"Downloading blob to {downloadFilePath}");
         BlobDownloadInfo download = await blobClient.DownloadAsync();
 
@@ -124,16 +128,22 @@ class Program
         Console.WriteLine("Cleanup completed.");
     }
 }
+```
 
-5. Run the Application
+## 5. Run the Application
 
+```sh
 dotnet build
 dotnet run
+```
 
-6. Clean Up Resources
+## 6. Clean Up Resources
 
+```sh
 az group delete --name az204-blob-rg --no-wait
+```
 
-Summary:
+# Summary
 
-This project demonstrates how to programmatically interact with Azure Blob Storage using .NET. It covers creating a container, uploading a blob, listing blobs, downloading blobs, and deleting a container. This is a crucial skill for cloud developers working with Azure storage solutions.
+This project demonstrates how to programmatically interact with Azure Blob Storage using .NET. It covers creating a container, uploading a blob, listing blobs, downloading blobs, and deleting a container and its contents.
+```
