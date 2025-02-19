@@ -1,1 +1,139 @@
+Objective:
 
+To demonstrate how to create, manage, and delete Azure Blob storage resources using the .NET client library in a console application.
+
+Why does this matter?
+
+Azure Blob Storage is a scalable cloud storage solution for unstructured data. It is widely used for data storage, backup, and archiving. Learning how to interact with Azure Blob Storage programmatically is essential for cloud-based applications that handle large amounts of data.
+
+Use cases:
+
+Storing and retrieving large-scale unstructured data (images, videos, documents, etc.).
+
+Implementing cloud-based backups.
+
+Serving static content for websites.
+
+Data lakes for big data and analytics applications.
+
+Steps to Completion:
+
+1. Prerequisites
+
+An Azure account with an active subscription (Sign up for a free trial).
+
+Visual Studio Code installed.
+
+.NET 8 SDK installed.
+
+C# extension for Visual Studio Code.
+
+Azure CLI installed.
+
+2. Setting Up Azure Resources
+
+Log in to Azure:
+
+az login
+
+Create a resource group:
+
+az group create --location <myLocation> --name az204-blob-rg
+
+Create a storage account:
+
+az storage account create --resource-group az204-blob-rg --name <myStorageAcct> --location <myLocation> --sku Standard_LRS
+
+Retrieve the connection string:
+
+Navigate to the Azure Portal.
+
+Locate the newly created storage account.
+
+Select Access keys > Copy the Connection string under key1.
+
+3. Prepare the .NET Project
+
+Create a new console application:
+
+dotnet new console -n az204-blob
+cd az204-blob
+dotnet build
+
+Create a folder for blob data:
+
+mkdir data
+
+Install Azure Blob Storage client library:
+
+dotnet add package Azure.Storage.Blobs
+
+4. Implement the .NET Code
+
+Open Program.cs and replace the content with the following code:
+
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
+using System;
+using System.IO;
+using System.Threading.Tasks;
+
+class Program
+{
+    static async Task Main()
+    {
+        string storageConnectionString = "YOUR_CONNECTION_STRING";
+        BlobServiceClient blobServiceClient = new BlobServiceClient(storageConnectionString);
+
+        string containerName = "wtblob" + Guid.NewGuid().ToString();
+        BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName);
+        Console.WriteLine($"Container {containerName} created.");
+
+        string localPath = "./data/";
+        string fileName = "samplefile" + Guid.NewGuid().ToString() + ".txt";
+        string localFilePath = Path.Combine(localPath, fileName);
+        await File.WriteAllTextAsync(localFilePath, "Hello, World!");
+
+        BlobClient blobClient = containerClient.GetBlobClient(fileName);
+        Console.WriteLine($"Uploading {fileName} to blob storage...");
+
+        using (FileStream uploadFileStream = File.OpenRead(localFilePath))
+        {
+            await blobClient.UploadAsync(uploadFileStream);
+        }
+
+        Console.WriteLine("Listing blobs in container:");
+        await foreach (BlobItem blobItem in containerClient.GetBlobsAsync())
+        {
+            Console.WriteLine("\t" + blobItem.Name);
+        }
+
+        string downloadFilePath = localFilePath.Replace(".txt", "DOWNLOADED.txt");
+        Console.WriteLine($"Downloading blob to {downloadFilePath}");
+        BlobDownloadInfo download = await blobClient.DownloadAsync();
+
+        using (FileStream downloadFileStream = File.OpenWrite(downloadFilePath))
+        {
+            await download.Content.CopyToAsync(downloadFileStream);
+        }
+
+        await containerClient.DeleteAsync();
+        File.Delete(localFilePath);
+        File.Delete(downloadFilePath);
+
+        Console.WriteLine("Cleanup completed.");
+    }
+}
+
+5. Run the Application
+
+dotnet build
+dotnet run
+
+6. Clean Up Resources
+
+az group delete --name az204-blob-rg --no-wait
+
+Summary:
+
+This project demonstrates how to programmatically interact with Azure Blob Storage using .NET. It covers creating a container, uploading a blob, listing blobs, downloading blobs, and deleting a container. This is a crucial skill for cloud developers working with Azure storage solutions.
