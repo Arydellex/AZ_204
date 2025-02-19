@@ -1,1 +1,158 @@
+# Implement Interactive Authentication using MSAL.NET
 
+## Objective:
+Perform interactive authentication using MSAL.NET in a console application.
+
+## Why does this matter?
+- Provides hands-on experience with the Microsoft identity platform.
+- Demonstrates the use of MSAL.NET for interactive authentication.
+- Helps understand how to acquire tokens and authenticate users in .NET applications.
+
+## Use Cases:
+- Authenticating users in .NET applications.
+- Acquiring tokens to access Microsoft Graph and other APIs.
+- Implementing secure authentication in console applications.
+
+## Steps to Completion:
+
+### 1. Register a New Application
+- Sign in to the Azure portal.
+- Search for and select **Microsoft Entra ID**.
+- Under **Manage**, select **App registrations > New registration**.
+- Enter the application's registration information:
+  - **Name:** az204appreg
+  - **Supported account types:** Accounts in this organizational directory only
+  - **Redirect URI (optional):** Public client/native (mobile & desktop), and enter `http://localhost`
+- Select **Register**.
+
+Microsoft Entra ID assigns a unique application (client) ID to the app, and takes you to the application's Overview page.
+
+### 2. Set Up the Console Application
+- Launch **Visual Studio Code** and open a terminal.
+- Create a folder for the project and change into the folder:
+  
+  ```ps
+  md az204-auth
+  cd az204-auth
+  ```
+
+- Create the .NET console app:
+  
+  ```ps
+  dotnet new console
+  ```
+
+- Open the `az204-auth` folder in Visual Studio Code:
+  
+  ```ps
+  code . -r
+  ```
+
+### 3. Build the Console App
+In this section, add the necessary packages and code to the project.
+
+#### Add Packages and Using Statements
+- Add the `Microsoft.Identity.Client` package to the project in the terminal:
+  
+  ```ps
+  dotnet add package Microsoft.Identity.Client
+  ```
+
+- Open the `Program.cs` file and add using statements to include `Microsoft.Identity.Client` and enable async operations:
+
+  ```csharp
+  using System.Threading.Tasks;
+  using Microsoft.Identity.Client;
+  ```
+
+- Change the `Main` method to enable async:
+
+  ```csharp
+  public static async Task Main(string[] args)
+  ```
+
+### 4. Add Code for the Interactive Authentication
+- Add two variables to hold the Application (client) and Directory (tenant) IDs. Replace the string values with the appropriate values from the portal:
+
+  ```csharp
+  private const string _clientId = "APPLICATION_CLIENT_ID";
+  private const string _tenantId = "DIRECTORY_TENANT_ID";
+  ```
+
+- Use the `PublicClientApplicationBuilder` class to build the authorization context:
+
+  ```csharp
+  var app = PublicClientApplicationBuilder
+      .Create(_clientId)
+      .WithAuthority(AzureCloudInstance.AzurePublic, _tenantId)
+      .WithRedirectUri("http://localhost")
+      .Build();
+  ```
+
+### 5. Acquire a Token
+- Set the permission scope for the token request:
+
+  ```csharp
+  string[] scopes = { "user.read" };
+  ```
+
+- Add code to request the token and write the result out to the console:
+
+  ```csharp
+  AuthenticationResult result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+  Console.WriteLine($"Token:\t{result.AccessToken}");
+  ```
+
+### 6. Review Completed Application
+The contents of the `Program.cs` file resemble the following example:
+
+```csharp
+using System;
+using System.Threading.Tasks;
+using Microsoft.Identity.Client;
+
+namespace az204_auth
+{
+    class Program
+    {
+        private const string _clientId = "APPLICATION_CLIENT_ID";
+        private const string _tenantId = "DIRECTORY_TENANT_ID";
+
+        public static async Task Main(string[] args)
+        {
+            var app = PublicClientApplicationBuilder
+                .Create(_clientId)
+                .WithAuthority(AzureCloudInstance.AzurePublic, _tenantId)
+                .WithRedirectUri("http://localhost")
+                .Build(); 
+
+            string[] scopes = { "user.read" };
+            AuthenticationResult result = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+
+            Console.WriteLine($"Token:\t{result.AccessToken}");
+        }
+    }
+}
+```
+
+### 7. Run the Application
+- In the Visual Studio Code terminal, run `dotnet build` to check for errors, then `dotnet run` to run the app.
+- The app opens the default browser, prompting you to select the account to authenticate with. If there are multiple accounts listed, select the one associated with the tenant used in the app.
+- If this is the first time authenticating to the registered app, you'll receive a "Permissions requested" notification asking to approve the app to read data associated with the account. Select **Accept**.
+- You'll see the results similar to the example below in the console:
+  
+  ```
+  Token: eyJ0eXAiOiJKV1QiLCJub25jZSI6IlVhU.....
+  ```
+
+## Result:
+- An application was registered with the Microsoft identity platform.
+- A console application was set up using MSAL.NET.
+- A token was acquired interactively and printed to the console.
+- The project demonstrated the use of MSAL.NET for interactive authentication in .NET applications.
+
+## Notes:
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided code snippets as a guide to perform the tasks.
+```
