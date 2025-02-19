@@ -1,4 +1,5 @@
 Create Azure Cosmos DB Resources using the Azure Portal
+
 Objective:
 Create Azure Cosmos DB resources by using the Azure portal, including creating an Azure Cosmos DB account, adding a database and a container, adding data to the database, and cleaning up resources.
 
