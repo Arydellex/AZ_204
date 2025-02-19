@@ -1,1 +1,82 @@
+# Build and Run a Container Image using Azure Container Registry Tasks
 
+## Objective
+Build and run a container image by using Azure Container Registry Tasks.
+
+## Why does this matter?
+- Provides hands-on experience with Azure Container Registry.
+- Demonstrates the process of building, pushing, and running container images.
+- Helps understand the benefits of using Azure Container Registry for containerized applications.
+
+## Use Cases
+- Building and managing container images.
+- Deploying containerized applications efficiently.
+- Automating container image workflows using Azure Container Registry Tasks.
+
+## Steps to Completion
+
+### Prerequisites
+- An Azure account with an active subscription. If you don't already have one, you can sign up for a free trial at [Azure Free Trial](https://azure.com/free).
+
+### 1. Sign in to Azure and Start the Cloud Shell
+- Sign in to the Azure portal and open the Cloud Shell.
+- When the shell opens, select the Bash environment.
+
+### 2. Create an Azure Container Registry
+- Create a resource group for the registry. Replace `<myLocation>` with a location near you:
+  ```bash
+  az group create --name az204-acr-rg --location <myLocation>
+  ```
+- Create a basic container registry. Replace `<myContainerRegistry>` with a unique value:
+  ```bash
+  az acr create --resource-group az204-acr-rg \
+      --name <myContainerRegistry> --sku Basic
+  ```
+
+### 3. Build and Push Image from a Dockerfile
+- Create or navigate to a local directory and create the Dockerfile:
+  ```bash
+  echo FROM mcr.microsoft.com/hello-world > Dockerfile
+  ```
+- Build the image and push it to your registry. Replace `<myContainerRegistry>` with the name you used earlier:
+  ```bash
+  az acr build --image sample/hello-world:v1  \
+      --registry <myContainerRegistry> \
+      --file Dockerfile .
+  ```
+
+### 4. Verify the Results
+- List the repositories in your registry. Replace `<myContainerRegistry>` with the name you used earlier:
+  ```bash
+  az acr repository list --name <myContainerRegistry> --output table
+  ```
+- List the tags on the sample/hello-world repository. Replace `<myContainerRegistry>` with the name you used earlier:
+  ```bash
+  az acr repository show-tags --name <myContainerRegistry> \
+      --repository sample/hello-world --output table
+  ```
+
+### 5. Run the Image in the ACR
+- Run the sample/hello-world:v1 container image from your container registry. Replace `<myContainerRegistry>` with the name you used earlier:
+  ```bash
+  az acr run --registry <myContainerRegistry> \
+      --cmd '$Registry/sample/hello-world:v1' /dev/null
+  ```
+
+### 6. Clean Up Resources
+- When no longer needed, you can use the following command to remove the resource group, the container registry, and the container images stored there:
+  ```bash
+  az group delete --name az204-acr-rg --no-wait
+  ```
+
+## Result
+- A container image is built and pushed to Azure Container Registry.
+- The image is run from the registry.
+- Resources are cleaned up after the project is completed.
+- The project demonstrates the use of Azure Container Registry for managing container images.
+
+## Notes
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided code snippets as a guide to perform the tasks.
+```
