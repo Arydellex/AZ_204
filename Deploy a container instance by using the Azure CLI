@@ -1,1 +1,84 @@
+# Deploy a Container Instance using the Azure CLI
 
+## Objective
+Deploy a container instance using the Azure CLI.
+
+## Why does this matter?
+- Provides hands-on experience with deploying containerized applications in Azure.
+- Demonstrates the use of the Azure CLI for resource management.
+- Helps understand the benefits of container instances for running lightweight, scalable applications.
+
+## Use Cases
+- Deploying containerized applications quickly and efficiently.
+- Learning the process of managing containers using the Azure CLI.
+- Running lightweight, scalable applications in the cloud.
+- Automating container deployments.
+
+## Steps to Completion
+
+### 1. Sign in to Azure and Create the Resource Group
+- Sign in to the Azure portal and open the Cloud Shell.
+- When the shell opens, select the Bash environment.
+- Create a new resource group with the name `az204-aci-rg`. Replace `<myLocation>` with a region near you:
+
+    ```bash
+    az group create --name az204-aci-rg --location <myLocation>
+    ```
+
+### 2. Create a Container
+- Provide a name, a Docker image, and an Azure resource group to the `az container create` command. Expose the container to the Internet by specifying a DNS name label.
+- Create a DNS name to expose your container to the Internet. Your DNS name must be unique. Run this command from Cloud Shell to create a variable that holds a unique name:
+
+    ```bash
+    DNS_NAME_LABEL=aci-example-$RANDOM
+    ```
+
+- Run the following `az container create` command to start a container instance. Replace `<myLocation>` with the region you specified earlier:
+
+    ```bash
+    az container create --resource-group az204-aci-rg \
+        --name mycontainer \
+        --image mcr.microsoft.com/azuredocs/aci-helloworld \
+        --ports 80 --os-type Linux --cpu 1 --memory 1 \
+        --dns-name-label $DNS_NAME_LABEL --location <myLocation>
+    ```
+
+### 3. Verify the Container is Running
+- When the `az container create` command completes, run `az container show` to check its status:
+
+    ```bash
+    az container show --resource-group az204-aci-rg \
+        --name mycontainer \
+        --query "{FQDN:ipAddress.fqdn,ProvisioningState:provisioningState}" \
+        --out table
+    ```
+
+- You will see your container's fully qualified domain name (FQDN) and its provisioning state. For example:
+
+    ```plaintext
+    FQDN                                    ProvisioningState
+    --------------------------------------  -------------------
+    aci-wt.eastus.azurecontainer.io         Succeeded
+    ```
+
+    > Note: If your container is in the Creating state, wait a few moments and run the command again until you see the Succeeded state.
+
+- From a browser, navigate to your container's FQDN to see it running. You may get a warning that the site isn't safe.
+
+### 4. Clean Up Resources
+- When no longer needed, use the `az group delete` command to remove the resource group, the container registry, and the container images stored there:
+
+    ```bash
+    az group delete --name az204-aci-rg --no-wait
+    ```
+
+## Result
+- A container instance is deployed and running in Azure.
+- The container is exposed to the Internet using a DNS name.
+- Resources are cleaned up after the project is completed.
+- The project demonstrates the use of the Azure CLI for managing container instances.
+
+## Notes
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided code snippets as a guide to perform the tasks.
