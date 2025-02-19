@@ -1,105 +1,71 @@
-Create Azure Cosmos DB Resources using the Azure Portal
+```markdown
+# Create Azure Cosmos DB Resources using the Azure Portal
 
-Objective:
+## Objective
 Create Azure Cosmos DB resources by using the Azure portal, including creating an Azure Cosmos DB account, adding a database and a container, adding data to the database, and cleaning up resources.
 
-Why does this matter?
-Provides hands-on experience with Azure Cosmos DB.
+## Why does this matter?
+- Provides hands-on experience with Azure Cosmos DB.
+- Demonstrates the process of creating and managing database resources using the Azure portal.
+- Helps understand the capabilities and benefits of Azure Cosmos DB for scalable, high-performance applications.
+- Showcases the use of serverless database architecture.
 
-Demonstrates the process of creating and managing database resources using the Azure portal.
+## Use Cases
+- Storing and managing large volumes of structured and semi-structured data.
+- Building applications that require high availability and low latency across multiple geographic regions.
+- Handling diverse data types and querying needs without schema restrictions.
+- Learning the process of deploying and managing Azure Cosmos DB resources.
 
-Helps understand the capabilities and benefits of Azure Cosmos DB for scalable, high-performance applications.
+## Steps to Completion
 
-Showcases the use of serverless database architecture.
+### 1. Create an Azure Cosmos DB Account
+1. Sign in to the [Azure portal](https://portal.azure.com).
+2. From the Azure portal navigation pane, select **+ Create a resource**.
+3. Search for **Azure Cosmos DB**, then select **Create/Azure Cosmos DB** to get started.
+4. On the **Which API best suits your workload?** page, select **Create** in the **Azure Cosmos DB for NoSQL** box.
+5. Enter the basic settings for the new Azure Cosmos DB account:
+   - **Subscription:** Select the subscription you want to use.
+   - **Resource Group:** Select **Create new**, then enter `az204-cosmos-rg`.
+   - **Account Name:** Enter a unique name to identify your Azure Cosmos account. The name can only contain lowercase letters, numbers, and the hyphen (-) character. It must be between 3-31 characters in length.
+   - **Availability Zones:** Select **Disable**.
+   - **Location:** Use the location closest to your users for the fastest access to the data.
+   - **Capacity mode:** Select **Serverless**.
+6. Select **Review + create**.
+7. Review the account settings, and then select **Create**. Wait for the portal page to display **Your deployment is complete**.
+8. Select **Go to resource** to go to the Azure Cosmos DB account page.
 
-Use Cases:
-Storing and managing large volumes of structured and semi-structured data.
+### 2. Add a Database and a Container
+1. Select **Data Explorer** from the left navigation on your Azure Cosmos DB account page, and then select **New Container**.
+2. In the **New container** pane, enter the settings for the new container:
+   - **Database ID:** Select **Create new**, and enter `ToDoList`.
+   - **Container ID:** Enter `Items`.
+   - **Partition key:** Enter `/category`.
+3. Select **OK**. The Data Explorer displays the new database and the container that you created.
 
-Building applications that require high availability and low latency across multiple geographic regions.
+### 3. Add Data to Your Database
+1. In **Data Explorer**, expand the `ToDoList` database, and expand the `Items` container. Next, select `Items`, and then select **New Item**.
+2. Add the following structure to the item on the right side of the Items pane:
+   ```json
+   {
+       "id": "1",
+       "category": "personal",
+       "name": "groceries",
+       "description": "Pick up apples and strawberries.",
+       "isComplete": false
+   }
+   ```
+3. Select **Save**.
+4. Select **New Item** again, and create and save another item with a unique `id` and any other properties and values you want. Your items can have any structure, because Azure Cosmos DB doesn't impose any schema restrictions.
 
-Handling diverse data types and querying needs without schema restrictions.
 
-Learning the process of deploying and managing Azure Cosmos DB resources.
+## Result
+- Azure Cosmos DB account, database, and container are created.
+- Data is added to the new database using Data Explorer.
+- Resources are cleaned up after the project is completed.
+- The project demonstrates the use of Azure Cosmos DB for managing distributed data.
 
-Steps to Completion:
-1. Create an Azure Cosmos DB Account
-Sign in to the Azure portal.
-
-From the Azure portal navigation pane, select + Create a resource.
-
-Search for Azure Cosmos DB, then select Create/Azure Cosmos DB to get started.
-
-On the Which API best suits your workload? page, select Create in the Azure Cosmos DB for NoSQL box.
-
-Enter the basic settings for the new Azure Cosmos DB account:
-
-Subscription: Select the subscription you want to use.
-
-Resource Group: Select Create new, then enter az204-cosmos-rg.
-
-Account Name: Enter a unique name to identify your Azure Cosmos account. The name can only contain lowercase letters, numbers, and the hyphen (-) character. It must be between 3-31 characters in length.
-
-Availability Zones: Select Disable.
-
-Location: Use the location closest to your users for the fastest access to the data.
-
-Capacity mode: Select Serverless.
-
-Select Review + create.
-
-Review the account settings, and then select Create. Wait for the portal page to display Your deployment is complete.
-
-Select Go to resource to go to the Azure Cosmos DB account page.
-
-2. Add a Database and a Container
-Select Data Explorer from the left navigation on your Azure Cosmos DB account page, and then select New Container.
-
-In the New container pane, enter the settings for the new container:
-
-Database ID: Select Create new, and enter ToDoList.
-
-Container ID: Enter Items.
-
-Partition key: Enter /category.
-
-Select OK. The Data Explorer displays the new database and the container that you created.
-
-3. Add Data to Your Database
-In Data Explorer, expand the ToDoList database, and expand the Items container. Next, select Items, and then select New Item.
-
-Add the following structure to the item on the right side of the Items pane:
-
-json
-{
-    "id": "1",
-    "category": "personal",
-    "name": "groceries",
-    "description": "Pick up apples and strawberries.",
-    "isComplete": false
-}
-Select Save.
-
-Select New Item again, and create and save another item with a unique id and any other properties and values you want. Your items can have any structure, because Azure Cosmos DB doesn't impose any schema on your data.
-
-4. Clean Up Resources
-Select Overview from the left navigation on your Azure Cosmos DB account page.
-
-Select the az204-cosmos-rg resource group link in the Essentials group.
-
-Select Delete resource group and follow the directions to delete the resource group and all the resources it contains.
-
-Result:
-Azure Cosmos DB account, database, and container are created.
-
-Data is added to the new database using Data Explorer.
-
-Resources are cleaned up after the project is completed.
-
-The project demonstrates the use of Azure Cosmos DB for managing distributed data.
-
-Notes:
-Ensure your Azure account is active and has the necessary permissions.
-
-Follow each step carefully to avoid any errors.
-
-Use the provided JSON structure as a template for adding more data to the database.
+## Notes
+- Ensure your Azure account is active and has the necessary permissions.
+- Follow each step carefully to avoid any errors.
+- Use the provided JSON structure as a template for adding more data to the database.
+```
