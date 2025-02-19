@@ -1,1 +1,83 @@
+# Azure Function Deployment Using Visual Studio Code
+
+## Objective:
+Create and deploy a C# Azure Function that responds to HTTP requests using Visual Studio Code.
+
+## Why does this matter?
+- Provides hands-on experience with serverless computing in Azure.
+- Demonstrates local function development and cloud deployment.
+- Helps understand the workflow for using Azure Functions in real-world applications.
+
+## Use Cases:
+- Implementing lightweight HTTP-based APIs.
+- Automating workflows with serverless computing.
+- Creating event-driven applications that scale dynamically.
+
+## Steps to Completion:
+
+### 1. Prerequisites
+Ensure you have the following:
+- An Azure account with an active subscription ([Sign up here](https://azure.com/free))
+- Azure Functions Core Tools (version 4.x)
+- Visual Studio Code with the Azure Functions and C# extensions
+- .NET 8 installed
+
+### 2. Create a Local Project
+1. Open Visual Studio Code and press `F1` to open the command palette.
+2. Run `Azure Functions: Create New Project...`.
+3. Choose a directory for the project workspace.
+4. Provide the following details:
+   - **Language**: C#
+   - **.NET Runtime**: .NET 8.0 Isolated (LTS)
+   - **Template**: HTTP Trigger
+   - **Function Name**: `HttpExample`
+   - **Namespace**: `My.Function`
+   - **Authorization Level**: Anonymous
+   - **Open Project**: Open in current window
+
+### 3. Run the Function Locally
+1. Open the terminal in Visual Studio Code (`Terminal > New Terminal`).
+2. Start debugging by pressing `F5`. The function will run locally, showing a URL endpoint.
+3. In the **Azure: Functions** area, expand `Local Project > Functions`.
+4. Right-click `HttpExample` and choose `Execute Function Now...`.
+5. Enter `{ "name": "Azure" }` as the request body and press `Enter`.
+6. Observe the function execution output in the terminal.
+7. Stop debugging by pressing `Shift + F5`.
+
+### 4. Sign in to Azure
+1. In the **Azure: Functions** area, click `Sign in to Azure...`.
+2. Log in using your Azure account credentials.
+3. After successful login, your Azure subscriptions will appear in the sidebar.
+
+### 5. Create Azure Resources
+1. Click the `Create resource...` button in the **Azure: Resources** area.
+2. Provide the following details:
+   - **Create Function App in Azure...**
+   - **Function App Name**: A globally unique name
+   - **Runtime Stack**: .NET 8.0 Isolated (LTS)
+   - **Region**: Select a nearby region
+   - **Subscription**: Choose an existing subscription
+3. Azure will create the required resources:
+   - Resource group
+   - Storage account
+   - Consumption plan
+   - Function app
+   - Application Insights instance
+
+### 6. Deploy to Azure
+1. Open the command palette and run `Azure Functions: Deploy to Function App...`.
+2. Select the function app created in Azure.
+3. Confirm overwriting previous deployments if prompted.
+4. After deployment, select `View Output` to review the status.
+
+### 7. Run the Function in Azure
+1. Expand `Resources > Subscription > Function App > Functions`.
+2. Right-click `HttpExample` and choose `Execute Function Now...`.
+3. Enter `{ "name": "Azure" }` as the request body and press `Enter`.
+4. Observe the function execution and response in the notification panel.
+
+## Result:
+- A C# Azure Function is successfully deployed to Azure.
+- The function can handle HTTP requests locally and in the cloud.
+- This setup provides a scalable, serverless solution for API development.
 
